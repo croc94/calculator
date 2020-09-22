@@ -17,10 +17,13 @@ window.onload = function () {
 
 
     self.operators = document.getElementsByClassName ('operator');
-    self.math_operator = 0;
+    self.math_operator = '0';
 
 
     self.calculateBTN = document.getElementById ('result');
+
+    self.c_btn = document.getElementById ('c');
+    self.ce_btn = document.getElementById ('ce');
 
 
     //     *****     event listners     *****
@@ -48,8 +51,9 @@ window.onload = function () {
 
     for (let i = 0; i < self.operators.length; i++) {
         self.operators[i].addEventListener ('click', function (e) {
-
-            if( !(self.displayBlock.value.lastIndexOf ('.') == (self.displayBlock.value.length - 1))) {
+            console.log('self.math_operator: ' + self.math_operator);
+            console.log (' self.math_operator typeof: ' + typeof self.math_operator);
+            if( !(self.displayBlock.value.lastIndexOf ('.') == (self.displayBlock.value.length - 1)) && (self.math_operator === '0')) {
                 self.fist_digit = self.displayBlock.value;
                 self.math_operator = e.srcElement.textContent;
                 self.displayBlock.value = e.srcElement.textContent;
@@ -63,9 +67,8 @@ window.onload = function () {
 
         //   ***   check decimal position
 
-        let decimal_1st_num_size, decimal_2st_num_size, dot_size = 0;
-
-        if (self.fist_digit.indexOf ('.') !== -1) {
+        let decimal_1st_num_size = 0, decimal_2st_num_size = 0, dot_size = 0;
+        if ((+self.fist_digit.indexOf ('.')) !== -1) {
             decimal_1st_num_size = self.fist_digit.length -1 - (+self.fist_digit.indexOf ('.'));
         }
         if (self.displayBlock.value.indexOf ('.') !== -1){
@@ -93,11 +96,21 @@ window.onload = function () {
                 self.displayBlock.value = (self.fist_digit * self.displayBlock.value).toFixed (dot_size);
                 break;
             case '/':
-
-                
                 self.displayBlock.value = self.fist_digit / self.displayBlock.value;
                 break;
 
         }
+        self.math_operator = '0';
     })
+
+    self.c_btn.addEventListener ('click', function (e) {
+        self.fist_digit = 0;
+        self.math_operator = 0;
+        self.displayBlock.value = 0;
+    })
+
+    self.ce_btn.addEventListener ('click', function (e) {
+        self.displayBlock.value = 0;
+    })
+
 }
