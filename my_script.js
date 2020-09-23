@@ -38,18 +38,19 @@ window.onload = function () {
                 self.calc_condition = false;
             }
 
-
-            //   ***   if the previous time one of the symbols was displayed in the
+            add_numbers (e);
+        })
+    }
+    function add_numbers (event) {
+        //   ***   if the previous time one of the symbols was displayed in the
             //   ***   display field, then replaces it with itself, otherwise  it
             //   ***   is attached to the end of the expression shown on the display
-            if (self.displayBlock.value === '0' || self.displayBlock.value === '/' || self.displayBlock.value === '*' || self.displayBlock.value === '-' || self.displayBlock.value === '+') {
-                self.displayBlock.value = e.srcElement.textContent;
+            if (self.displayBlock.value === '0' || self.displayBlock.value === '/' || self.displayBlock.value === '*' || self.displayBlock.value === '-' || self.displayBlock.value === '+' || displayBlock.value === '√' || displayBlock.value === 'pow') {
+                self.displayBlock.value = event.srcElement.textContent;
             }
             else {
-                self.displayBlock.value += e.srcElement.textContent;
+                self.displayBlock.value += event.srcElement.textContent;
             }
-
-        })
     }
 
 
@@ -70,6 +71,10 @@ window.onload = function () {
                 self.math_operator = e.srcElement.textContent;
                 self.displayBlock.value = e.srcElement.textContent;
 
+                //if was choosed √ operator, calculate immediately
+                if (displayBlock.value === '√') {
+                    calculate_func ();
+                }
             }
         })
     }
@@ -112,6 +117,12 @@ window.onload = function () {
                 break;
             case '/':
                 self.displayBlock.value = self.fist_digit / self.displayBlock.value;
+                break;
+            case '√':
+                self.displayBlock.value = Math.sqrt (self.fist_digit);
+                break;
+            case 'pow':
+                self.displayBlock.value = Math.pow (self.fist_digit, self.displayBlock.value);
                 break;
 
         }
