@@ -32,13 +32,6 @@ window.onload = function () {
 
     for (let i = 0; i < self.btn_numbers.length; i++) {
         self.btn_numbers[i].addEventListener ('click', function (e) {
-            //   ***   if after calculation button '=' was pressed numder button
-            //   ***   use c_button function to clear all
-            if (self.calc_condition) {
-                c_button ();
-                self.calc_condition = false;
-            }
-
             add_numbers (e);
         })
     }
@@ -87,7 +80,10 @@ window.onload = function () {
         })
     }
     function operator_func (event) {
-        
+            // если переменная self.math_operator = '0'; не ноль, а знак, и был нажат новый знак, то посчитать
+            if (self.math_operator !== '0') {
+                calculate_func ();
+            }
             //   ***   disables the button if the last dot is displayed on the 
             //   ***   display or the operator has already been pressed before
             if( !(self.displayBlock.value.lastIndexOf ('.') == (self.displayBlock.value.length - 1)) && (self.math_operator === '0')) {
@@ -96,7 +92,7 @@ window.onload = function () {
                 self.displayBlock.value = event.srcElement.textContent;
 
                 //if was choosed √ operator, calculate immediately
-                if (displayBlock.value === '√') {
+                if (self.displayBlock.value === '√') {
                     calculate_func ();
                 }
             }
@@ -142,6 +138,15 @@ window.onload = function () {
                 self.displayBlock.value = self.fist_digit / self.displayBlock.value;
                 break;
             case '√':
+                //if number negative break
+                if (self.fist_digit < 0) {
+                    self.displayBlock.value = 'not correct';
+                    setTimeout(time_func, 1000);
+                    function time_func () {
+                        self.displayBlock.value = '0';
+                    }
+                    break;
+                }
                 self.displayBlock.value = Math.sqrt (self.fist_digit);
                 break;
             case 'pow':
