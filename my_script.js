@@ -21,6 +21,7 @@ window.onload = function () {
 
 
     self.calculateBTN = document.getElementById ('result');
+    self.calc_condition = false;
 
     self.c_btn = document.getElementById ('c');
     self.ce_btn = document.getElementById ('ce');
@@ -30,6 +31,13 @@ window.onload = function () {
 
     for (let i = 0; i < self.btn_numbers.length; i++) {
         self.btn_numbers[i].addEventListener ('click', function (e) {
+            //   ***   if after calculation button '=' was pressed numder button
+            //   ***   use c_button function to clear all
+            if (self.calc_condition) {
+                c_button ();
+                self.calc_condition = false;
+            }
+
 
             //   ***   if the previous time one of the symbols was displayed in the
             //   ***   display field, then replaces it with itself, otherwise  it
@@ -67,7 +75,9 @@ window.onload = function () {
     }
 
 
-    self.calculateBTN.addEventListener ('click', function (e) {
+    self.calculateBTN.addEventListener ('click', calculate_func);
+    function calculate_func () {
+        
 
         //   ***   check decimal position at digit
 
@@ -108,14 +118,21 @@ window.onload = function () {
 
         //   ***   this line prohibits double-clicking the operation button 
         self.math_operator = '0';
-    })
 
-    self.c_btn.addEventListener ('click', function (e) {
+        //   *** chanche calculate condition
+        self.calc_condition = true;
+    }
+
+
+    self.c_btn.addEventListener ('click', c_button);
+    function c_button () {
         //   ***   delete all data buttons
         self.fist_digit = 0;
         self.math_operator = '0';
         self.displayBlock.value = 0;
-    })
+    }
+
+    
 
     self.ce_btn.addEventListener ('click', function (e) {
         //   ***   delete only the last data button
