@@ -31,6 +31,9 @@ window.onload = function () {
     for (let i = 0; i < self.btn_numbers.length; i++) {
         self.btn_numbers[i].addEventListener ('click', function (e) {
 
+            //   ***   if the previous time one of the symbols was displayed in the
+            //   ***   display field, then replaces it with itself, otherwise  it
+            //   ***   is attached to the end of the expression shown on the display
             if (self.displayBlock.value === '0' || self.displayBlock.value === '/' || self.displayBlock.value === '*' || self.displayBlock.value === '-' || self.displayBlock.value === '+') {
                 self.displayBlock.value = e.srcElement.textContent;
             }
@@ -43,6 +46,7 @@ window.onload = function () {
 
 
     self.decimal.addEventListener ('click', function (e) {
+        //    ***   disables the button if the point button was previously pressed and displayed
         if (self.displayBlock.value.indexOf ('.') === -1) {
             self.displayBlock.value += e.srcElement.textContent;
         }
@@ -51,8 +55,8 @@ window.onload = function () {
 
     for (let i = 0; i < self.operators.length; i++) {
         self.operators[i].addEventListener ('click', function (e) {
-            console.log('self.math_operator: ' + self.math_operator);
-            console.log (' self.math_operator typeof: ' + typeof self.math_operator);
+            //   ***   disables the button if the last dot is displayed on the 
+            //   ***   display or the operator has already been pressed before
             if( !(self.displayBlock.value.lastIndexOf ('.') == (self.displayBlock.value.length - 1)) && (self.math_operator === '0')) {
                 self.fist_digit = self.displayBlock.value;
                 self.math_operator = e.srcElement.textContent;
@@ -65,7 +69,7 @@ window.onload = function () {
 
     self.calculateBTN.addEventListener ('click', function (e) {
 
-        //   ***   check decimal position
+        //   ***   check decimal position at digit
 
         let decimal_1st_num_size = 0, decimal_2st_num_size = 0, dot_size = 0;
         if ((+self.fist_digit.indexOf ('.')) !== -1) {
@@ -79,6 +83,7 @@ window.onload = function () {
         //    **** choose math operator
 
         switch (self.math_operator) {
+            //   ***   dot_size defines how many decimal places there will be in the expression
             case '+':
                 if (decimal_1st_num_size || decimal_2st_num_size) {
                     dot_size = (decimal_1st_num_size > decimal_2st_num_size) ? decimal_1st_num_size : decimal_2st_num_size;
@@ -100,16 +105,20 @@ window.onload = function () {
                 break;
 
         }
+
+        //   ***   this line prohibits double-clicking the operation button 
         self.math_operator = '0';
     })
 
     self.c_btn.addEventListener ('click', function (e) {
+        //   ***   delete all data buttons
         self.fist_digit = 0;
-        self.math_operator = 0;
+        self.math_operator = '0';
         self.displayBlock.value = 0;
     })
 
     self.ce_btn.addEventListener ('click', function (e) {
+        //   ***   delete only the last data button
         self.displayBlock.value = 0;
     })
 
