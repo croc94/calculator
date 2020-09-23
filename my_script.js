@@ -18,6 +18,7 @@ window.onload = function () {
 
     self.operators = document.getElementsByClassName ('operator');
     self.math_operator = '0';
+    self.negative_marker = false;
 
 
     self.calculateBTN = document.getElementById ('result');
@@ -45,6 +46,12 @@ window.onload = function () {
         //   ***   if the previous time one of the symbols was displayed in the
             //   ***   display field, then replaces it with itself, otherwise  it
             //   ***   is attached to the end of the expression shown on the display
+            if (self.negative_marker !== false) {
+                self.displayBlock.value = '-' + event.srcElement.textContent;
+                self.negative_marker = false;
+                return
+            }
+
             if (self.displayBlock.value === '0' || self.displayBlock.value === '/' || self.displayBlock.value === '*' || self.displayBlock.value === '-' || self.displayBlock.value === '+' || displayBlock.value === '√' || displayBlock.value === 'pow') {
                 self.displayBlock.value = event.srcElement.textContent;
             }
@@ -64,19 +71,35 @@ window.onload = function () {
 
     for (let i = 0; i < self.operators.length; i++) {
         self.operators[i].addEventListener ('click', function (e) {
+            /* if there is a number on the display, and it is not equal to 0 or not math 
+            operator, then this is an operator and you need to call the operator_func function 
+            */
+            if ((typeof parseFloat(self.displayBlock.value) === 'number') && (parseFloat(self.displayBlock.value) !== 0) && (self.displayBlock.value !== '/') && (self.displayBlock.value !== '*') && (self.displayBlock.value !== '-') && (self.displayBlock.value !== '+') && (self.displayBlock.value !== '√') && (self.displayBlock.value !== 'pow')) {
+                operator_func (e);
+            } else if ((parseFloat(self.displayBlock.value) === 0) || ((self.displayBlock.value === '/')  || (self.displayBlock.value === '*') || (self.displayBlock.value === '-') || (self.displayBlock.value === '+') || (self.displayBlock.value === '√') || (self.displayBlock.value === 'pow')) && (e.srcElement.textContent === '-')){
+                /* otherwise, if the line contains the number 0, or a mathematical operator,
+                 and if a minus was pressed and there is nothing else in the line, then this 
+                 is a negative number, and you just need to add a minus sign to the line 
+                 */
+                self.displayBlock.value = e.srcElement.textContent;
+                self.negative_marker = true;
+            }
+        })
+    }
+    function operator_func (event) {
+        
             //   ***   disables the button if the last dot is displayed on the 
             //   ***   display or the operator has already been pressed before
             if( !(self.displayBlock.value.lastIndexOf ('.') == (self.displayBlock.value.length - 1)) && (self.math_operator === '0')) {
                 self.fist_digit = self.displayBlock.value;
-                self.math_operator = e.srcElement.textContent;
-                self.displayBlock.value = e.srcElement.textContent;
+                self.math_operator = event.srcElement.textContent;
+                self.displayBlock.value = event.srcElement.textContent;
 
                 //if was choosed √ operator, calculate immediately
                 if (displayBlock.value === '√') {
                     calculate_func ();
                 }
             }
-        })
     }
 
 
@@ -87,7 +110,7 @@ window.onload = function () {
         //   ***   check decimal position at digit
 
         let decimal_1st_num_size = 0, decimal_2st_num_size = 0, dot_size = 0;
-        if ((+self.fist_digit.indexOf ('.')) !== -1) {
+        if (self.fist_digit.toString ().indexOf ('.') !== -1) {
             decimal_1st_num_size = self.fist_digit.length -1 - (+self.fist_digit.indexOf ('.'));
         }
         if (self.displayBlock.value.indexOf ('.') !== -1){
@@ -122,6 +145,9 @@ window.onload = function () {
                 self.displayBlock.value = Math.sqrt (self.fist_digit);
                 break;
             case 'pow':
+                if (self.displayBlock.value === 'pow') {
+                    self.displayBlock.value = 1;
+                }
                 self.displayBlock.value = Math.pow (self.fist_digit, self.displayBlock.value);
                 break;
 
@@ -132,6 +158,9 @@ window.onload = function () {
 
         //   *** chanche calculate condition
         self.calc_condition = true;
+
+        //   ***   self.negative_marker condition
+        self.negative_marker = false;
     }
 
 
